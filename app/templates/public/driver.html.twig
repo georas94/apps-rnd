@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Driver{% endblock %}
+
+{#{% block body %}#}
+{#    <h2>Simulation d'envoi de positions - Lyon</h2>#}
+{#    <p id="position-info">Démarrage de la simulation...</p>#}
+{#    <button id="stopSimulation" class="btn btn-danger">Arrêter la simulation</button>#}
+{#{% endblock %}#}
+
+{#{% block javascripts %}#}
+{#    <script>#}
+{#        const vehicleId = 'driver1';#}
+{#        const API_URL = '/api/track';#}
+{#        let simulationInterval;#}
+{#        let isSimulating = false;#}
+
+{#        // Points de passage pour la simulation (trajet réaliste dans Lyon)#}
+{#        const lyonRoute = [#}
+{#            [45.7640, 4.8357],  // Place Bellecour#}
+{#            [45.7673, 4.8337],  // Rue de la République#}
+{#            [45.7715, 4.8262],  // Hôtel de Ville#}
+{#            [45.7744, 4.8279],  // Croix-Rousse#}
+{#            [45.7787, 4.8243],  // Bas des pentes#}
+{#            [45.7812, 4.8196],  // Boulevard des Canuts#}
+{#            [45.7830, 4.8145],  // Haut de Croix-Rousse#}
+{#            [45.7815, 4.8090],  // Vers la Saône#}
+{#            [45.7773, 4.8057],  // Quai de Saône#}
+{#            [45.7720, 4.8120]   // Retour vers centre#}
+{#        ];#}
+
+{#        function sendPosition(lat, lng) {#}
+{#            fetch(API_URL, {#}
+{#                method: 'POST',#}
+{#                headers: { 'Content-Type': 'application/json' },#}
+{#                body: JSON.stringify({ vehicleId, lat, lng })#}
+{#            })#}
+{#                .then(response => {#}
+{#                    console.log('Position envoyée:', lat, lng);#}
+{#                    document.getElementById('position-info').textContent =#}
+{#                        `Dernière position envoyée: ${lat.toFixed(6)}, ${lng.toFixed(6)} - ${new Date().toLocaleTimeString()}`;#}
+{#                })#}
+{#                .catch(error => {#}
+{#                    console.error('Erreur:', error);#}
+{#                    document.getElementById('position-info').textContent = 'Erreur lors de l\'envoi';#}
+{#                });#}
+{#        }#}
+
+{#        function startSimulation() {#}
+{#            if (isSimulating) return;#}
+
+{#            isSimulating = true;#}
+{#            let currentPoint = 0;#}
+
+{#            // Envoi immédiat du premier point#}
+{#            const [lat, lng] = lyonRoute[currentPoint];#}
+{#            sendPosition(lat, lng);#}
+{#            currentPoint++;#}
+
+{#            // Configuration de l'intervalle pour les points suivants#}
+{#            simulationInterval = setInterval(() => {#}
+{#                const [lat, lng] = lyonRoute[currentPoint];#}
+{#                sendPosition(lat, lng);#}
+
+{#                currentPoint = (currentPoint + 1) % lyonRoute.length;#}
+{#            }, 3000); // Envoi toutes les 3 secondes#}
+
+{#            document.getElementById('position-info').textContent = 'Simulation en cours...';#}
+{#        }#}
+
+{#        function stopSimulation() {#}
+{#            clearInterval(simulationInterval);#}
+{#            isSimulating = false;#}
+{#            document.getElementById('position-info').textContent = 'Simulation arrêtée';#}
+{#        }#}
+
+{#        // Démarrer automatiquement la simulation au chargement#}
+{#        document.addEventListener('DOMContentLoaded', () => {#}
+{#            startSimulation();#}
+
+{#            // Bouton d'arrêt#}
+{#            document.getElementById('stopSimulation').addEventListener('click', stopSimulation);#}
+{#        });#}
+{#    </script>#}
+{#{% endblock %}#}
+{#{% extends 'base.html.twig' %}#}
+
+{#{% block title  %}Driver{% endblock  %}#}
+
+{% block body  %}
+    <div class="text-center">
+        <h1 class="text-gray-700 mb-4 p-1 text-center">Envoi de position en cours...</h1>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        const vehicleId = 'driver1';
+        const API_URL = '/api/track';
+
+        function sendPosition(lat, lng) {
+            fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ vehicleId, lat, lng })
+            });
+        }
+
+        if ('geolocation' in navigator) {
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    const { latitude, longitude, accuracy } = position.coords;
+                    console.log('Position:', latitude, longitude, 'Accuracy:', accuracy);
+                    if (accuracy <= 50) {
+                        sendPosition(latitude, longitude); // ton API
+                    }
+                },
+                (error) => {
+                    console.error('Erreur géoloc :', error);
+                    // switch (error.code) {
+                    //     case error.PERMISSION_DENIED:
+                    //         alert("Autorisation refusée pour accéder à la géolocalisation.");
+                    //         break;
+                    //     case error.POSITION_UNAVAILABLE:
+                    //         alert("La position est actuellement indisponible. Réessaie dans un moment.");
+                    //         break;
+                    //     case error.TIMEOUT:
+                    //         alert("Le service de localisation a expiré.");
+                    //         break;
+                    // }
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 3000,
+                    maximumAge: 0
+                }
+            );
+        } else {
+            alert('Géolocalisation non supportée');
+        }
+    </script>
+{% endblock %}

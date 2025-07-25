@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="icon" type="image/png" href="{{ asset('assets/logo/favicon-16x16.png') }}" sizes="16x16">
+        <link rel="icon" type="image/png" href="{{ asset('assets/logo/favicon-32x32.png') }}" sizes="32x32">
+        <link rel="icon" type="image/png" href="{{ asset('assets/logo/favicon-48x48.png') }}" sizes="48x48">
+        <link rel="icon" type="image/png" href="{{ asset('assets/logo/favicon-192x192.png') }}" sizes="192x192">
+        <link rel="icon" type="image/png" href="{{ asset('assets/logo/favicon-512x512.png') }}" sizes="512x512">
+        <link rel="apple-touch-icon" href="{{ asset('assets/logo/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/svg+xml" href="{{ asset('assets/logo/logo.svg') }}">
+        <!-- Font awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <!-- Trix -->
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+        <!-- FlowBite css -->
+        <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+        <!-- Leaflet -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <!-- CSS custom -->
+        <!-- JS Tailwind -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#529D58',
+                            secondary: '#4382F0',
+                            bfred: '#E63946',
+                            bfgold: '#E9C46A',
+                            bfcream: '#F8EDEB'
+                        },
+                        fontFamily: {
+                            sans: ['Inter', 'sans-serif'],
+                        },
+                        animation: {
+                            'fade-in': 'fadeIn 0.5s ease-out forwards',
+                            'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        },
+                        keyframes: {
+                            fadeIn: {
+                                '0%': { opacity: 0, transform: 'translateY(10px)' },
+                                '100%': { opacity: 1, transform: 'translateY(0)' },
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body class="bg-gray-50 font-sans flex flex-col min-h-screen">
+        <div id="main-wrapper" class="flex flex-col min-h-screen">
+            <div class="flex justify-between items-center md:mb-0 mb-6">
+                <!-- drawer init and show -->
+                <button class="mt-4 ml-4 h-10 w-10 items-center justify-center text-white shadow-md focus:outline-none transition-all duration-300" type="button" data-drawer-target="drawer-navigation" data-drawer-show="drawer-navigation" aria-controls="drawer-navigation">
+                    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M4 7C4 6.44771 4.44772 6 5 6H24C24.5523 6 25 6.44771 25 7C25 7.55229 24.5523 8 24 8H5C4.44772 8 4 7.55229 4 7Z" fill="#000000"></path><path d="M4 13.9998C4 13.4475 4.44772 12.9997 5 12.9997L16 13C16.5523 13 17 13.4477 17 14C17 14.5523 16.5523 15 16 15L5 14.9998C4.44772 14.9998 4 14.552 4 13.9998Z" fill="#000000"></path><path d="M5 19.9998C4.44772 19.9998 4 20.4475 4 20.9998C4 21.552 4.44772 21.9997 5 21.9997H22C22.5523 21.9997 23 21.552 23 20.9998C23 20.4475 22.5523 19.9998 22 19.9998H5Z" fill="#000000"></path></g>
+                    </svg>
+                </button>
+{#                <div class="flex items-center space-x-3 mt-4 mr-4">#}
+{#                    <a href="#">#}
+{#                        <img src="{{ asset('assets/logo/logo.svg') }}" class="h-20" alt="Logo" />#}
+{#                    </a>#}
+{#                </div>#}
+            </div>
+
+            <!-- drawer component -->
+            <div id="drawer-navigation" class="fixed top-0 left-0 z-40 md:w-72 w-74 h-screen p-4 transition-transform -translate-x-full bg-white border-r shadow-md" tabindex="-1" aria-labelledby="drawer-navigation-label">
+
+{#                <!-- Logo -->#}
+{#                <a href="#">#}
+{#                    <div class="flex items-center justify-center p-4 border-b">#}
+{#                            <div class="flex items-center space-x-3">#}
+{#                                <img src="{{ asset('assets/logo/logo.svg') }}" class="h-28" alt="Logo" />#}
+{#                            </div>#}
+{#                    </div>#}
+{#                </a>#}
+
+                <!-- Close Button -->
+                <button type="button" data-drawer-hide="drawer-navigation" aria-controls="drawer-navigation"
+                        class="absolute top-3 right-3 text-gray-600 hover:text-black dark:hover:text-gray-300 focus:outline-none">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+
+                <!-- Navigation -->
+{#                <div class="">#}
+{#                    {% if app.user %}#}
+{#                        <!-- Menu connecté-->#}
+{#                        <ul class="flex-1 px-4 py-6 space-y-2 text-sm font-medium">#}
+{#                            <li>#}
+{#                                <a href="{{ path('app_ao_list') }}" class="flex items-center p-3 rounded-lg hover:bg-primary/10 text-gray-700 hover:text-primary transition">#}
+{#                                    <i class="fa-solid text-2xl fa-briefcase w-6 text-primary"></i>#}
+{#                                    <span class="ml-3 text-2xl w-[7em]">AO Privés</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                            <li>#}
+{#                                <a href="{{ path('app_ao_public_search') }}" class="flex items-center p-3 rounded-lg hover:bg-primary/10 text-gray-700 hover:text-primary transition mt-4">#}
+{#                                    <i class="fa-solid text-2xl fa-landmark w-6 text-primary"></i>#}
+{#                                    <span class="ml-3 text-2xl w-[7em]">AO Publics</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                            <li>#}
+{#                                <a href="{{ path('app_decrees_search') }}" class="flex items-center p-3 rounded-lg hover:bg-primary/10 text-gray-700 hover:text-primary transition mt-4">#}
+{#                                    <i class="fa-solid text-2xl fa-gavel w-6 text-primary"></i>#}
+{#                                    <span class="ml-3 text-2xl w-[7em]">Recherche Juridique</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                            <li>#}
+{#                                <a href="{{ path('app_user_account') }}" class="flex items-center p-3 rounded-lg hover:bg-primary/10 text-gray-700 hover:text-primary transition mt-4">#}
+{#                                    <i class="fa-solid text-2xl fa-user w-6 text-primary"></i>#}
+{#                                    <span class="ml-3 text-2xl w-[7em]">Mon Compte</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                            <li>#}
+{#                                <a href="{{ path('app_ao_liked') }}" class="flex items-center p-3 rounded-lg hover:bg-primary/10 text-gray-700 hover:text-primary transition mt-4">#}
+{#                                    <i class="fa-solid fa-bookmark text-2xl w-6 text-primary"></i>#}
+{#                                    <span class="ml-3 text-2xl w-[7em]">Favoris</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                            {% if is_granted('ROLE_COMPANY_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}#}
+{#                                <li>#}
+{#                                    <a href="{{ path('app_company_list') }}" class="flex items-center p-3 rounded-lg hover:bg-primary/10 text-gray-700 hover:text-primary transition mt-4">#}
+{#                                        <i class="fa-solid text-2xl fa-building w-6 text-primary"></i>#}
+{#                                        <span class="ml-3 text-2xl w-[7em]">Espace admin</span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                            {% endif %}#}
+{#                            <li>#}
+{#                                <a href="{{ path('app_logout') }}" class="flex items-center p-3 rounded-lg hover:bg-primary/10 text-gray-700 hover:text-primary transition mt-4">#}
+{#                                    <i class="fa-solid text-2xl fa-right-from-bracket w-6 text-primary"></i>#}
+{#                                    <span class="ml-3 text-2xl w-[7em]">Déconnexion</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    {% else %}#}
+{#                        <!-- Menu non connecté-->#}
+{#                        <ul class="flex-1 px-4 py-6 space-y-2 text-sm font-medium">#}
+{#                            <li>#}
+{#                                <a href="{{ path('app_login') }}" class="flex items-center p-3 rounded-lg hover:bg-primary/10 text-gray-700 hover:text-primary transition mt-4">#}
+{#                                    <i class="fa-solid text-2xl fa-user w-6 text-primary"></i>#}
+{#                                    <span class="ml-3 text-2xl w-[7em]">Connexion</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                            <li>#}
+{#                                <a href="{{ path('app_register') }}" class="flex items-center p-3 rounded-lg hover:bg-primary/10 text-gray-700 hover:text-primary transition mt-4">#}
+{#                                    <i class="fa-solid fa-address-card text-2xl w-6 text-primary"></i>#}
+{#                                    <span class="ml-3 text-2xl w-[7em]">Inscription</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    {% endif %}#}
+{#                </div>#}
+            </div>
+            <!-- Content -->
+            <div id="main-content" class="flex-1 p-4 md:p-6 transition-all duration-300">
+                <main class="container mx-auto">
+                    {% block body %}{% endblock %}
+                </main>
+            </div>
+        </div>
+         <!-- Footer -->
+{#        <footer class="bg-gray-800 text-white py-8">#}
+{#            <div class="container mx-auto px-4">#}
+{#                <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">#}
+{#                    <div>#}
+{#                        <h3 class="font-bold text-lg mb-4">AO Burkina</h3>#}
+{#                        <p class="text-gray-500">Plateforme officielle des marchés publics et privés pour le Burkina Faso</p>#}
+{#                    </div>#}
+{#                    <div>#}
+{#                        <h4 class="font-semibold mb-4">Liens utiles</h4>#}
+{#                        <ul class="space-y-2">#}
+{#                            <li><a href="{{ path('app_legal_mentions') }}" class="text-gray-400 hover:text-white">Mentions légales</a></li>#}
+{#                            <li><a href="{{ path('app_legal_conditions') }}" class="text-gray-400 hover:text-white">Conditions d'utilisation</a></li>#}
+{#                        </ul>#}
+{#                    </div>#}
+{#                    <div>#}
+{#                        <h4 class="font-semibold mb-4">Contact</h4>#}
+{#                        <p class="text-gray-400">contact@aoburkina.bf</p>#}
+{#                        <p class="text-gray-400">+226 XX XX XX XX</p>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">#}
+{#                    <p>&copy; {{ "now"|date("Y") }} <a href="https://rashid.tlabs.work/" target="_blank"><strong style="color: rgb(0, 229, 255);">TLabs</strong></a> pour la plateforme <strong>AO Burkina</strong>. Tous droits réservés.</p>#}
+{#                </div>#}
+{#            </div>#}
+{#        </footer>#}
+        <!-- Alpine Plugins -->
+        <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+        <!-- Alpine Core -->
+        <script src="//unpkg.com/alpinejs" defer></script>
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+        <!-- FlowBite -->
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+        {% block javascripts %}
+        {% endblock %}
+    </body>
+</html>

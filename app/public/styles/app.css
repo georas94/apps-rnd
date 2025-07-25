@@ -1,0 +1,26 @@
+#fulltext-container li, #fulltext-container p {
+    margin: 0.7em !important;
+}
+
+trix-toolbar [data-trix-action="link"],
+trix-toolbar [data-trix-action="attachFiles"] {
+    display: none !important;
+}
+
+.required:after {
+    content:" *";
+    color: red;
+}
+
+.sidebar a:hover {
+    transform: translateX(4px);
+    transition: transform 0.2s ease-in-out;
+}
+
+.marker-cluster-custom {
+    background: transparent !important;
+}
+
+ul {
+    list-style: none;
+}

@@ -1,0 +1,12 @@
+/.idea/
+###> symfony/framework-bundle ###
+.idea/
+/app/.env.local
+/app/var/
+/app/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/app/phpunit.xml
+/app/.phpunit.result.cache
+###< phpunit/phpunit ###

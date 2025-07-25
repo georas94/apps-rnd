@@ -1,0 +1,57 @@
+services:
+  fpm-apps-rnd:
+    container_name: fpm-apps-rnd
+    restart: always
+    build:
+      context: ./app
+      dockerfile: docker/php-fpm/Dockerfile
+    volumes:
+      - ./app:/app:rw,cached
+    ports:
+      - "9008:9000"
+    networks:
+      - tools
+
+  nginx-apps-rnd:
+    container_name: nginx-apps-rnd
+    build:
+      context: ./app
+      dockerfile: docker/nginx/Dockerfile-nginx
+    restart: always
+    links:
+      - fpm-apps-rnd
+    depends_on:
+      - fpm-apps-rnd
+    volumes:
+      - ./app:/app:rw,cached
+    ports:
+      - "8087:80"
+    networks:
+      - tools
+
+  mercure:
+    image: dunglas/mercure
+    container_name: mercure-apps-rnd
+    environment:
+      DEBUG: "debug"
+      SERVER_NAME: ':80'
+      # Change the following value if you know how it works.
+      # MERCURE_TRANSPORT_URL: "bolt://mercure.db"
+      MERCURE_PUBLISHER_JWT_KEY: '6ezRfnjxA8j7kbBJOa17mNnShMR8Pr3q+EGzvH4N8Ig='
+      MERCURE_SUBSCRIBER_JWT_KEY: '6ezRfnjxA8j7kbBJOa17mNnShMR8Pr3q+EGzvH4N8Ig='
+      # In the cors_origin, add your domain(s). Or just use *
+      MERCURE_EXTRA_DIRECTIVES: |-
+        cors_origins *
+        anonymous
+    ports:
+      - "3000:80"
+    networks:
+      - tools
+
+volumes:
+  db-data-apps-rnd: {}
+
+networks:
+  tools:
+    external: true
+    name: tools

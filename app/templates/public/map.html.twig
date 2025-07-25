@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title  %}Map{% endblock  %}
+
+{% block body  %}
+    <div style="height: 50em" id="map"></div>
+{% endblock %}
+{% block javascripts %}
+    <script src="https://unpkg.com/@mercure/client"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        const marker = L.marker([0, 0]).addTo(map);
+
+        const url = new URL('http://localhost:3000/.well-known/mercure');
+        url.searchParams.append('topic', '/vehicles/driver1');
+
+        const eventSource = new EventSource(url);
+        eventSource.onmessage = (e) => {
+            const { lat, lng } = JSON.parse(e.data);
+            marker.setLatLng([lat, lng]);
+            map.setView([lat, lng], 16);
+        };
+    </script>
+{% endblock %}
